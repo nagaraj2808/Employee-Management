@@ -11,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +42,12 @@ public class EmployeeExceptionHandler {
         return  ResponseEntity.status(404).body(new ErrorResponse("FAILED",HttpStatus.NOT_FOUND,errors));
     }
 
+    @ExceptionHandler(SignatureException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidTokenException(SignatureException exception){
+        List<String> errors = new ArrayList<>();
+        errors.add(exception.getMessage());
+        return  ResponseEntity.status(404).body(new ErrorResponse("FAILED",HttpStatus.NOT_FOUND,errors));
+    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleOtherExceptions(Exception exception){
